@@ -1,0 +1,37 @@
+.square
+{
+    width : 50px;
+    height : 50px;
+    background-color: white;
+    cursor : pointer;
+}
+
+.squareclose
+{
+    width : 50px;
+    height : 50px;
+    cursor : pointer;
+    background-color: #AAAAAA;
+}
+
+.squareNoBombNext
+{
+    width : 50px;
+    height : 50px;
+    cursor : pointer;
+    background-color: white;
+}
+.squareBombNext
+{
+    width : 50px;
+    height : 50px;
+    cursor : pointer;
+    background-color: #f1a312;
+}
+.squareIsBomb
+{
+    width : 50px;
+    height : 50px;
+    cursor : pointer;
+    background-color: #FF0000;
+}
