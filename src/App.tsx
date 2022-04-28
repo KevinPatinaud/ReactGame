@@ -7,19 +7,10 @@ function App() {
   return (
     <div className="App">
 
-      <Demineur/>
+      <Demineur  width={15}  nmbBomb={20}   />
     </div>
   );
 }
 
-/*
-      <DemineurSquare 
-      index={1}
-       boardWidth={5}
-       haveBomb = {true}
-       numberOfBombNext = {3}
-       checkBomb= {() => {} }
-      />
-      */
 
 export default App;

@@ -81,10 +81,10 @@ function generateBoard(boardWidth : number , nbOfBomb : number)
 
 
 
-function Demineur()
+function Demineur(props : any)
 {
-    const [ boardWidth , setBoardWidth] = useState(10);
-    const [ numberOfBomb , setNumberOfBomb] = useState( 5 ); 
+    const [ boardWidth , setBoardWidth] = useState(props.width);
+    const [ numberOfBomb , setNumberOfBomb] = useState( props.nmbBomb ); 
    const [ board , setBoard] = useState(generateBoard(boardWidth , numberOfBomb));
    const[dspBoard , setDspBoard] = useState(board.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ));
   // const[dspBoard , setDspBoard] = useState<JSX.Element[]>();
