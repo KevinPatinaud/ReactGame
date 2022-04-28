@@ -1,7 +1,8 @@
 import React , {Component, FunctionComponent, useState} from 'react';
 import DemineurSquare from './DemineurSquare';
 import SquareProps from './SquareProps';
-
+import useSound from 'use-sound';
+import boomSFX from '../sounds/boom.mp3';
 
 
 
@@ -88,6 +89,7 @@ function Demineur(props : any)
    const [ board , setBoard] = useState(generateBoard(boardWidth , numberOfBomb));
    const[dspBoard , setDspBoard] = useState(board.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ));
   // const[dspBoard , setDspBoard] = useState<JSX.Element[]>();
+  const [ playBoom ] =  useSound(boomSFX);
 
   document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -106,6 +108,7 @@ function Demineur(props : any)
 
             if ( board[index].haveBomb )
             {
+                playBoom();
                 alert("Boooom ! You loose");
             }
 
