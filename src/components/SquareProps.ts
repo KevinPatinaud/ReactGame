@@ -6,5 +6,7 @@ export default interface SquareProps {
     revealed:boolean;
     revealFunct : Function;
     numberOfBombNext: number;
+    flagged: boolean;
+    switchFlag : Function;
     
 }

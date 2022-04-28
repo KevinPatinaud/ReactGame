@@ -69,7 +69,7 @@ function generateBoard(boardWidth : number , nbOfBomb : number)
             nbOfBombNext ++;
 
 
-        const sqProps = { index:i, boardWidth:boardWidth, haveBomb:( lstOfBomb.indexOf(i) >= 0 ) , numberOfBombNext:nbOfBombNext ,  revealed:false, revealFunct:()=>{} };
+        const sqProps = { index:i, boardWidth:boardWidth, haveBomb:( lstOfBomb.indexOf(i) >= 0 ) , numberOfBombNext:nbOfBombNext ,  revealed:false, revealFunct:()=>{} , flagged:false, switchFlag:()=>{} };
         
         b.push( sqProps );
         
@@ -83,10 +83,20 @@ function generateBoard(boardWidth : number , nbOfBomb : number)
 
 function Demineur()
 {
-    const[ boardWidth , setBoardWidth] = useState(10);
-   const [ board , setBoard] = useState(generateBoard(boardWidth , 5));
+    const [ boardWidth , setBoardWidth] = useState(10);
+    const [ numberOfBomb , setNumberOfBomb] = useState( 5 ); 
+   const [ board , setBoard] = useState(generateBoard(boardWidth , numberOfBomb));
    const[dspBoard , setDspBoard] = useState(board.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ));
+  // const[dspBoard , setDspBoard] = useState<JSX.Element[]>();
 
+  document.addEventListener('contextmenu', event => event.preventDefault());
+
+
+  function updateBoard(b : SquareProps[] )
+  {
+    setBoard(b); 
+    setDspBoard( b.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ) );
+  }
 
    
    function revealSquare(index:number)
@@ -114,13 +124,26 @@ function Demineur()
                 }
             }
 
-            setBoard(board); 
-            setDspBoard( board.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ) );
+            console.log ("revealed : " + board.reduce( (cnt , elm ) => ( (elm.revealed) ? cnt + 1 : cnt ) , 0 ));
+            if ( board.reduce( (cnt , elm ) => ( (elm.revealed) ? cnt + 1 : cnt ) , 0 ) >= boardWidth * boardWidth - numberOfBomb)
+            {
+                alert("You win !");
+            }
+
+            updateBoard(board);
             console.log ( board );
        }
     }
 
-   board.map((elm : SquareProps) => {elm.revealFunct = revealSquare});
+
+    function switchFlag(index:number)
+    {
+        console.log(index);
+        board[index].flagged = ! board[index].flagged;
+        updateBoard(board);
+    }
+
+   board.map((elm : SquareProps) => {elm.revealFunct = revealSquare; elm.switchFlag = switchFlag});
 
     console.log( board );
     return <div>{dspBoard}</div>;
