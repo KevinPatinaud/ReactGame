@@ -2,17 +2,10 @@ import React , {useState} from 'react'
 import styles from './DemineurSquare.module.css';
 import SquareProps from './SquareProps';
 
-function endLine(index:number , boardWidth:number)
-{
-    if ((index + 1) % boardWidth === 0 ) 
-    {
-        return <br/>;
-    }
-    return ;
-}
 
 
-function DemineurSquare ( props : SquareProps )
+
+function DemineurSquare ( props : any)
 {
 
     return <> 
@@ -23,7 +16,7 @@ function DemineurSquare ( props : SquareProps )
             ( props.flagged ) ? "?" : "."
             }
         </button>
-        { endLine(props.index , props.boardWidth) }
+        { ((props.index + 1) % props.boardWidth === 0 ) ? <br/> : <></> }
     </>;
 
 }
