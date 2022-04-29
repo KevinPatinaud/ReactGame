@@ -5,11 +5,24 @@ import SquareProps from './SquareProps';
 
 
 
-function DemineurSquare ( props : any)
+function DemineurSquare ( props : SquareProps)
 {
 
     return <> 
-        <button onClick={()=>{props.revealFunct(props.index);}} onContextMenu={()=>{props.switchFlag(props.index);}} className={ (props.revealed) ? ( (props.haveBomb) ? styles.squareIsBomb : ((props.numberOfBombNext > 0) ? styles.squareBombNext : styles.squareNoBombNext )) : styles.squareclose}>{ 
+        <button onClick={()=>{props.revealFunct(props.index);}} onContextMenu={()=>{props.switchFlag(props.index);}} 
+        className={ 
+            (props.revealed) ? 
+            ( (props.haveBomb) ? 
+                styles.squareIsBomb 
+                : (
+                    (props.numberOfBombNext > 0) ? 
+                        styles.squareBombNext 
+                        : styles.squareNoBombNext 
+                    )
+                ) : ( props.flagged ) ?
+                styles.squareFlaged
+                : styles.squareclose
+            }>{ 
         ( props.revealed ) ?
             ( props.haveBomb) ? "X" : props.numberOfBombNext 
             : 

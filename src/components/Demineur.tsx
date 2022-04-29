@@ -3,6 +3,7 @@ import DemineurSquare from './DemineurSquare';
 import SquareProps from './SquareProps';
 import useSound from 'use-sound';
 import boomSFX from '../sounds/boom.mp3';
+import styles from './DemineurSquare.module.css';
 
 
 
@@ -149,7 +150,7 @@ function Demineur(props : any)
    board.map((elm : SquareProps) => {elm.revealFunct = revealSquare; elm.switchFlag = switchFlag});
 
     console.log( board );
-    return <div>{dspBoard}</div>;
+    return <div className={styles.demineursquare}>{dspBoard}</div>;
 }
 
 

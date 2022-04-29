@@ -1,37 +1,34 @@
-.square
+.demineursquare button
 {
     width : 50px;
     height : 50px;
-    background-color: white;
     cursor : pointer;
 }
 
+.squareFlaged
+{
+    background: rgb(170,170,170);
+    background: radial-gradient(circle, rgba(170,170,170,1) 0%, rgba(136,136,136,1) 100%);
+}
+
+
 .squareclose
 {
-    width : 50px;
-    height : 50px;
-    cursor : pointer;
-    background-color: #AAAAAA;
+    background: rgb(170,170,170);
+    background: linear-gradient(0deg, rgba(170,170,170,1) 0%, rgba(204,204,204,1) 100%);
 }
 
 .squareNoBombNext
 {
-    width : 50px;
-    height : 50px;
-    cursor : pointer;
     background-color: white;
 }
 .squareBombNext
 {
-    width : 50px;
-    height : 50px;
-    cursor : pointer;
-    background-color: #f1a312;
+    background: rgb(219,121,0);
+    background: linear-gradient(0deg, rgba(219,121,0,1) 0%, rgba(255,154,0,1) 100%);
 }
 .squareIsBomb
 {
-    width : 50px;
-    height : 50px;
-    cursor : pointer;
-    background-color: #FF0000;
+    background: rgb(219,0,0);
+    background: radial-gradient(circle, rgba(219,0,0,1) 21%, rgba(255,76,0,1) 100%);
 }
