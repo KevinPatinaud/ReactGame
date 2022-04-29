@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
 
-      <Demineur  width={15}  nmbBomb={20}   />
+      <Demineur  width={15}  nmbBomb={20}  />
     </div>
   );
 }

@@ -4,6 +4,14 @@ import SquareProps from './SquareProps';
 import useSound from 'use-sound';
 import boomSFX from '../sounds/boom.mp3';
 import styles from './DemineurSquare.module.css';
+import { lookupService } from 'dns';
+
+
+enum endStatusEnum  {
+    loose,
+    win,
+    notYet
+}
 
 
 
@@ -89,7 +97,7 @@ function Demineur(props : any)
     const [ numberOfBomb , setNumberOfBomb] = useState( props.nmbBomb ); 
    const [ board , setBoard] = useState(generateBoard(boardWidth , numberOfBomb));
    const[dspBoard , setDspBoard] = useState(board.map( (sqr : SquareProps) => <>{DemineurSquare(sqr)}</> ));
-  // const[dspBoard , setDspBoard] = useState<JSX.Element[]>();
+   const [ endStatus , setEndStatus ] = useState(endStatusEnum.notYet);
   const [ playBoom ] =  useSound(boomSFX);
 
   document.addEventListener('contextmenu', event => event.preventDefault());
@@ -104,13 +112,13 @@ function Demineur(props : any)
    
    function revealSquare(index:number)
    { 
-       if ( index !== null )
+       if ( index !== null && endStatus == endStatusEnum.notYet  )
        {
 
             if ( board[index].haveBomb )
             {
                 playBoom();
-                alert("Boooom ! You loose");
+                setEndStatus(endStatusEnum.loose );
             }
 
            console.log("revealSquare( " + index + " )");
@@ -131,7 +139,7 @@ function Demineur(props : any)
             console.log ("revealed : " + board.reduce( (cnt , elm ) => ( (elm.revealed) ? cnt + 1 : cnt ) , 0 ));
             if ( board.reduce( (cnt , elm ) => ( (elm.revealed) ? cnt + 1 : cnt ) , 0 ) >= boardWidth * boardWidth - numberOfBomb)
             {
-                alert("You win !");
+                setEndStatus( endStatusEnum.win );
             }
 
             updateBoard(board);
@@ -150,7 +158,15 @@ function Demineur(props : any)
    board.map((elm : SquareProps) => {elm.revealFunct = revealSquare; elm.switchFlag = switchFlag});
 
     console.log( board );
-    return <div className={styles.demineursquare}>{dspBoard}</div>;
+    return <div className={styles.demineursquare}>
+        { ( endStatus == endStatusEnum.win ) ?
+        <h1>Winner !</h1>   
+        :  ( endStatus == endStatusEnum.loose ) ?
+        <h1>Boom ! You loose</h1>
+        : <h1>Let's play</h1>
+        }
+        {dspBoard}
+        </div>;
 }
 
 

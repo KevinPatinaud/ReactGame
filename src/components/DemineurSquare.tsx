@@ -9,7 +9,7 @@ function DemineurSquare ( props : SquareProps)
 {
 
     return <> 
-        <button onClick={()=>{props.revealFunct(props.index);}} onContextMenu={()=>{props.switchFlag(props.index);}} 
+        <div onClick={()=>{props.revealFunct(props.index);}} onContextMenu={()=>{props.switchFlag(props.index);}} 
         className={ 
             (props.revealed) ? 
             ( (props.haveBomb) ? 
@@ -22,14 +22,15 @@ function DemineurSquare ( props : SquareProps)
                 ) : ( props.flagged ) ?
                 styles.squareFlaged
                 : styles.squareclose
-            }>{ 
+            }
+            style={ (props.index % props.boardWidth === 0 ) ? {clear:"left"} : {} }
+            >{ 
         ( props.revealed ) ?
             ( props.haveBomb) ? "X" : props.numberOfBombNext 
             : 
-            ( props.flagged ) ? "?" : "."
+            ( props.flagged ) ? "?" : ""
             }
-        </button>
-        { ((props.index + 1) % props.boardWidth === 0 ) ? <br/> : <></> }
+        </div>
     </>;
 
 }
