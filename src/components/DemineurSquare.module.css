@@ -1,11 +1,84 @@
 
 
+h1.letsplay
+{
+    font-size: 3em;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-weight: normal;
+    font-family: emoji;
+    color: #778899;
+}
+
+h1.loose
+{
+    font-size: 3em;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: emoji;
+    color: #dc143c;
+}
+h1.win
+{
+    font-size: 3em;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: emoji;
+    color: #1e90ff;
+}
+
 .demineursquare
 {
     text-align: center;
     width: fit-content;
     margin: 0 auto;
 }
+
+
+
+.resetBtn {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 10%;
+    text-align: center;
+    width: 200px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px;
+    height: 55px;
+    text-align:center;
+    border: none;
+    background-size: 300% 100%;
+
+    border-radius: 50px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    background-image: linear-gradient(to right, #667eea, #764ba2, #6B8DD6, #8E37D7);
+    box-shadow: 0 4px 15px 0 rgba(116, 79, 168, 0.75);
+}
+
+.resetBtn:hover {
+    background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.resetBtn:active{
+    font-size: 0px;
+    font-weight: 0;
+  }
+
+
+
 
 
 .demineursquare div
