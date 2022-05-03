@@ -2,10 +2,10 @@ import React, { Component, FunctionComponent, useState } from "react";
 import DemineurSquare from "./DemineurSquare";
 import SquareProps from "./SquareProps";
 import useSound from "use-sound";
-import boomSFX from "../sounds/boom.mp3";
+import boomSFX from "../../sounds/boom.mp3";
 import styles from "./DemineurSquare.module.css";
 import { lookupService } from "dns";
-
+import { useIntl } from "react-intl";
 enum endStatusEnum {
   loose,
   win,
@@ -89,7 +89,7 @@ function Demineur(props: any) {
   );
   const [endStatus, setEndStatus] = useState(endStatusEnum.notYet);
   const [playBoom] = useSound(boomSFX);
-
+  const intl = useIntl();
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
   function updateBoard(b: SquareProps[]) {
@@ -143,11 +143,17 @@ function Demineur(props: any) {
   return (
     <div data-testid={"demineur"} className={styles.demineursquare}>
       {endStatus == endStatusEnum.win ? (
-        <h1 className={styles.win}>Winner !</h1>
+        <h1 className={styles.win}>
+          {intl.formatMessage({ id: "app.demineur.win" })}
+        </h1>
       ) : endStatus == endStatusEnum.loose ? (
-        <h1 className={styles.loose}>Boom ! You loose</h1>
+        <h1 className={styles.loose}>
+          {intl.formatMessage({ id: "app.demineur.loose" })}
+        </h1>
       ) : (
-        <h1 className={styles.letsplay}>Let's play</h1>
+        <h1 className={styles.letsplay}>
+          {intl.formatMessage({ id: "app.demineur.letsplay" })}
+        </h1>
       )}
 
       {dspBoard}
@@ -163,7 +169,7 @@ function Demineur(props: any) {
           );
         }}
       >
-        New game
+        {intl.formatMessage({ id: "app.demineur.newgame" })}
       </button>
     </div>
   );
