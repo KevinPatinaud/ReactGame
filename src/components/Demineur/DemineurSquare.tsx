@@ -37,6 +37,15 @@ function DemineurSquare(props: any) {
 
   console.log(boardInterface);
 
+  function revealNear(xn: number, yn: number) {
+    if (numberOfBombNext == 0) {
+      if (x > 0) board[x - 1][y].revealed = true;
+      if (x < board.length - 1) board[x + 1][y].revealed = true;
+      if (y > 0) board[x][y - 1].revealed = true;
+      if (y < board.length - 1) board[x][y + 1].revealed = true;
+    }
+  }
+
   return (
     <>
       <div
@@ -45,6 +54,7 @@ function DemineurSquare(props: any) {
           // left click
           boardInterface.board[x][y].revealed = true;
           if (haveBomb) playBoom();
+          revealNear(x, y);
           boardInterface.updateBoard();
         }}
         onContextMenu={() => {

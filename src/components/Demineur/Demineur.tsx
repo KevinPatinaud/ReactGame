@@ -168,7 +168,7 @@ function Demineur(props: any) {
         <div className={styles.demineurboard}>
           {board.map((sqrRow: SquareProps[], x) => {
             return (
-              <div className="rowSquare">
+              <div className={styles.rowsquare}>
                 {sqrRow.map((sqr: SquareProps, y) => {
                   return <DemineurSquare key={x * y} x={x} y={y} />;
                 })}

@@ -50,7 +50,7 @@ function App() {
           }}
         />
 
-        <Demineur width={5} nmbBomb={7} />
+        <Demineur width={10} nmbBomb={7} />
       </div>
     </IntlProvider>
   );
