@@ -29,6 +29,13 @@ h1.win
     color: #1e90ff;
 }
 
+.demineurgame
+{
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
 .demineursquare
 {
     text-align: center;
@@ -36,7 +43,11 @@ h1.win
     margin: 0 auto;
 }
 
-
+.rowSquare
+{
+    width: fit-content;
+    float: none;
+}
 
 .resetBtn {
     -webkit-box-sizing: border-box;
@@ -81,7 +92,7 @@ h1.win
 
 
 
-.demineursquare div
+.demineurboard div
 {
     width : 45px;
     height : 45px;

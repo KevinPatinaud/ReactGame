@@ -1,12 +1,10 @@
 
 export default interface SquareProps {
-    index : number;
+    x : number;
+    y : number;
     boardWidth : number;
     haveBomb : boolean;
     revealed:boolean;
-    revealFunct : Function;
-    numberOfBombNext: number;
     flagged: boolean;
-    switchFlag : Function;
     
 }
