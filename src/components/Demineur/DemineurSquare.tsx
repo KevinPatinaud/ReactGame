@@ -4,63 +4,63 @@ import SquareProps from "./SquareProps";
 import useSound from "use-sound";
 import boomSFX from "../../sounds/boom.mp3";
 
-import { BoardContext, BoardInterface } from "./Demineur";
+import { BoardContext, BoardInterface, endStatusEnum } from "./Demineur";
 
-function DemineurSquare(props: any) {
+function DemineurSquare({ x, y }: any) {
   const [playBoom] = useSound(boomSFX);
   let boardInterface = useContext(BoardContext);
-  const x = props.x;
-  const y = props.y;
   const board = boardInterface.board;
+  const gameStatut = boardInterface.gameStatut;
   let haveBomb = board[x][y].haveBomb;
   let revealed = board[x][y].revealed;
   let flagged = board[x][y].flagged;
+  let numberOfBombNext = board[x][y].numberOfBombNext;
 
-  let numberOfBombNext = 0;
-
-  if (x > 0) {
-    if (board[x - 1][y].haveBomb) numberOfBombNext++;
-    if (y > 0) if (board[x - 1][y - 1].haveBomb) numberOfBombNext++;
-    if (y < board.length - 1)
-      if (board[x - 1][y + 1].haveBomb) numberOfBombNext++;
-  }
-
-  if (x < board.length - 1) {
-    if (board[x + 1][y].haveBomb) numberOfBombNext++;
-    if (y > 0) if (board[x + 1][y - 1].haveBomb) numberOfBombNext++;
-    if (y < board.length - 1)
-      if (board[x + 1][y + 1].haveBomb) numberOfBombNext++;
-  }
-
-  if (y > 0) if (board[x][y - 1].haveBomb) numberOfBombNext++;
-  if (y < board.length - 1) if (board[x][y + 1].haveBomb) numberOfBombNext++;
-
-  console.log(boardInterface);
+  // console.log(boardInterface);
 
   function revealNear(xn: number, yn: number) {
     if (numberOfBombNext == 0) {
-      if (x > 0) board[x - 1][y].revealed = true;
-      if (x < board.length - 1) board[x + 1][y].revealed = true;
-      if (y > 0) board[x][y - 1].revealed = true;
-      if (y < board.length - 1) board[x][y + 1].revealed = true;
+      if (xn > 0) {
+        revealCase(xn - 1, yn);
+      }
+      if (xn < board.length - 1) {
+        revealCase(xn + 1, yn);
+      }
+      if (yn > 0) {
+        revealCase(xn, yn - 1);
+      }
+      if (yn < board.length - 1) {
+        revealCase(xn, yn + 1);
+      }
+    }
+  }
+
+  function revealCase(xn: number, yn: number) {
+    if (!board[xn][yn].revealed) {
+      board[xn][yn].revealed = true;
+      if (board[xn][yn].numberOfBombNext == 0 && !board[xn][yn].haveBomb) {
+        revealNear(xn, yn);
+      }
     }
   }
 
   return (
     <>
       <div
-        data-testid={"square-btn-" + props.index}
         onClick={() => {
           // left click
-          boardInterface.board[x][y].revealed = true;
-          if (haveBomb) playBoom();
-          revealNear(x, y);
-          boardInterface.updateBoard();
+          if (gameStatut == endStatusEnum.notYet) {
+            if (haveBomb) playBoom();
+            revealCase(x, y);
+            boardInterface.updateBoard();
+          }
         }}
         onContextMenu={() => {
           // right click
-          board[x][y].flagged = !flagged;
-          boardInterface.updateBoard();
+          if (gameStatut == endStatusEnum.notYet) {
+            board[x][y].flagged = !flagged;
+            boardInterface.updateBoard();
+          }
         }}
         className={
           revealed

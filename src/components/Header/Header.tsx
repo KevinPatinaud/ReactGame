@@ -1,10 +1,24 @@
 import React, { Component, FunctionComponent, useState } from "react";
+import { Languages } from "../Language/LanguageManager";
+import styles from "./Header.module.css";
 
 function Header(props: any) {
   return (
     <>
-      <button onClick={props.switchLangueEN}>English</button>
-      <button onClick={props.switchLangueFR}>French</button>
+      <img
+        className={styles.lang_btn}
+        src="image/flag_eng.png"
+        onClick={() => {
+          props.switchLanguage(Languages.English);
+        }}
+      />
+      <img
+        className={styles.lang_btn}
+        src="image/flag_fr.png"
+        onClick={() => {
+          props.switchLanguage(Languages.French);
+        }}
+      />
     </>
   );
 }

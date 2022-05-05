@@ -13,7 +13,7 @@ import styles from "./Demineur.module.css";
 import { lookupService } from "dns";
 import { useIntl } from "react-intl";
 
-enum endStatusEnum {
+export enum endStatusEnum {
   loose,
   win,
   notYet,
@@ -21,6 +21,7 @@ enum endStatusEnum {
 
 export interface BoardInterface {
   board: SquareProps[][];
+  gameStatut: endStatusEnum;
   updateBoard: Function;
 }
 
@@ -57,7 +58,7 @@ function generateBoard(boardWidth: number, nbOfBomb: number) {
   let lstOfBomb = generateListOfBomb(boardWidth, nbOfBomb);
   console.log(lstOfBomb);
 
-  // count the number of bomb for each case
+  // set the bomb to each case
   for (let x = 0; x < boardWidth; x++) {
     b[x] = [];
     for (let y = 0; y < boardWidth; y++) {
@@ -72,6 +73,7 @@ function generateBoard(boardWidth: number, nbOfBomb: number) {
         y: y,
         boardWidth: boardWidth,
         haveBomb: haveABomb,
+        numberOfBombNext: 0,
         revealed: false,
         flagged: false,
       };
@@ -80,7 +82,36 @@ function generateBoard(boardWidth: number, nbOfBomb: number) {
     }
   }
 
+  for (let x = 0; x < boardWidth; x++) {
+    for (let y = 0; y < boardWidth; y++) {
+      b[x][y].numberOfBombNext = getNumberBombNext(b, x, y);
+    }
+  }
+
   return b;
+}
+
+function getNumberBombNext(board: SquareProps[][], x: number, y: number) {
+  let numberOfBombNext = 0;
+
+  if (x > 0) {
+    if (board[x - 1][y].haveBomb) numberOfBombNext++;
+    if (y > 0) if (board[x - 1][y - 1].haveBomb) numberOfBombNext++;
+    if (y < board.length - 1)
+      if (board[x - 1][y + 1].haveBomb) numberOfBombNext++;
+  }
+
+  if (x < board.length - 1) {
+    if (board[x + 1][y].haveBomb) numberOfBombNext++;
+    if (y > 0) if (board[x + 1][y - 1].haveBomb) numberOfBombNext++;
+    if (y < board.length - 1)
+      if (board[x + 1][y + 1].haveBomb) numberOfBombNext++;
+  }
+
+  if (y > 0) if (board[x][y - 1].haveBomb) numberOfBombNext++;
+  if (y < board.length - 1) if (board[x][y + 1].haveBomb) numberOfBombNext++;
+
+  return numberOfBombNext;
 }
 
 function Demineur(props: any) {
@@ -91,61 +122,34 @@ function Demineur(props: any) {
   const [ignored, forceUpdate] = useReducer((x: number) => x + 1, 0);
   const [playBoom] = useSound(boomSFX);
   const intl = useIntl();
+
   document.addEventListener("contextmenu", (event) => event.preventDefault()); // lock the right click
-  /*
-  function updateBoard(b: SquareProps[]) {
-    setBoard(b);
-    setDspBoard(b.map((sqr: SquareProps) => <>{DemineurSquare(sqr)}</>));
-  }
 
-  function revealSquare(index: number) {
-    if (endStatus == endStatusEnum.notYet) {
-      if (board[index].haveBomb) {
-        playBoom();
-        setEndStatus(endStatusEnum.loose);
-      }
-
-      if (!board[index].revealed) {
-        board[index].revealed = true;
-
-        // if the current isn't near to a bomb, reveal all nearest square
-        if (board[index].numberOfBombNext == 0 && !board[index].haveBomb) {
-          if (index % boardWidth > 0) revealSquare(index - 1);
-          if (index % boardWidth < boardWidth - 1) revealSquare(index + 1);
-          if (index >= boardWidth) revealSquare(index - boardWidth);
-          if (index < boardWidth * (boardWidth - 1))
-            revealSquare(index + boardWidth);
+  let nmbCaseRevealed = 0;
+  for (let x = 0; x < board.length; x++) {
+    for (let y = 0; y < board.length; y++) {
+      if (board[x][y].revealed) {
+        nmbCaseRevealed++;
+        if (board[x][y].haveBomb) {
+          if (endStatus == endStatusEnum.notYet)
+            setEndStatus(endStatusEnum.loose);
         }
       }
-
-      if (
-        board.reduce((cnt, elm) => (elm.revealed ? cnt + 1 : cnt), 0) >=
-        boardWidth * boardWidth - numberOfBomb
-      ) {
-        setEndStatus(endStatusEnum.win);
-      }
-
-      updateBoard(board);
     }
   }
 
-  function switchFlag(index: number) {
-    if (endStatus == endStatusEnum.notYet) {
-      board[index].flagged = !board[index].flagged;
-      updateBoard(board);
-    }
+  if (
+    nmbCaseRevealed + numberOfBomb >= boardWidth * boardWidth &&
+    endStatus == endStatusEnum.notYet
+  ) {
+    setEndStatus(endStatusEnum.win);
   }
-  board.map((elm: SquareProps) => {
-    elm.revealFunct = revealSquare;
-    elm.switchFlag = switchFlag;
-  });
-
-*/
 
   return (
     <BoardContext.Provider
       value={{
         board: board,
+        gameStatut: endStatus,
         updateBoard: (board: SquareProps[][]) => {
           forceUpdate();
         },
@@ -170,7 +174,9 @@ function Demineur(props: any) {
             return (
               <div className={styles.rowsquare}>
                 {sqrRow.map((sqr: SquareProps, y) => {
-                  return <DemineurSquare key={x * y} x={x} y={y} />;
+                  return (
+                    <DemineurSquare key={boardWidth * x + y + 1} x={x} y={y} />
+                  );
                 })}
               </div>
             );
