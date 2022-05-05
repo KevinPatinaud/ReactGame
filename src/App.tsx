@@ -24,6 +24,7 @@ const messages = {
 function App() {
   const [language, setLanguage] = useState(navigator.language.split(/[-_]/)[0]); // language without region code
   const [message, setMessage] = useState(messages.fr);
+  const [theme, setTheme] = useState("White");
 
   const cache = createIntlCache();
 
@@ -49,7 +50,7 @@ function App() {
           }}
         />
 
-        <Demineur width={15} nmbBomb={20} />
+        <Demineur width={10} nmbBomb={7} />
       </div>
     </IntlProvider>
   );

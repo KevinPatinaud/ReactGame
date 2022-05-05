@@ -1,27 +1,49 @@
-import React, { Component, FunctionComponent, useState } from "react";
+import React, {
+  createContext,
+  Component,
+  FunctionComponent,
+  useState,
+  useReducer,
+} from "react";
 import DemineurSquare from "./DemineurSquare";
 import SquareProps from "./SquareProps";
 import useSound from "use-sound";
 import boomSFX from "../../sounds/boom.mp3";
-import styles from "./DemineurSquare.module.css";
+import styles from "./Demineur.module.css";
 import { lookupService } from "dns";
 import { useIntl } from "react-intl";
+
 enum endStatusEnum {
   loose,
   win,
   notYet,
 }
 
-function generateListOfBomb(
-  totalAmountOfSquare: number,
-  nbOfBombToSet: number
-) {
-  var result: number[] = new Array();
+export interface BoardInterface {
+  board: SquareProps[][];
+  updateBoard: Function;
+}
+
+export const BoardContext = React.createContext({} as BoardInterface);
+
+function generateListOfBomb(boardWidth: number, nbOfBombToSet: number) {
+  var result = new Array<{ x: number; y: number }>();
 
   while (result.length < nbOfBombToSet) {
-    var nb = Math.trunc(Math.random() * totalAmountOfSquare);
-    if (result.indexOf(nb) === -1) {
-      result.push(nb);
+    var x_rand = Math.trunc(Math.random() * boardWidth);
+    var y_rand = Math.trunc(Math.random() * boardWidth);
+
+    let alreadySet = false;
+
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].x == x_rand && result[i].y == y_rand) alreadySet = true;
+    }
+
+    if (!alreadySet) {
+      result[result.length] = {
+        x: x_rand,
+        y: y_rand,
+      };
     }
   }
 
@@ -30,51 +52,32 @@ function generateListOfBomb(
 
 // Generate a new board
 function generateBoard(boardWidth: number, nbOfBomb: number) {
-  const b: SquareProps[] = new Array();
+  const b: SquareProps[][] = new Array<Array<SquareProps>>();
 
-  var lstOfBomb = generateListOfBomb(boardWidth * boardWidth, nbOfBomb);
+  let lstOfBomb = generateListOfBomb(boardWidth, nbOfBomb);
+  console.log(lstOfBomb);
 
   // count the number of bomb for each case
-  for (var i = 0; i < boardWidth * boardWidth; i++) {
-    var nbOfBombNext = 0;
+  for (let x = 0; x < boardWidth; x++) {
+    b[x] = [];
+    for (let y = 0; y < boardWidth; y++) {
+      let haveABomb = false;
 
-    var cg = i % boardWidth > 0 ? false : true;
-    var cd = i % boardWidth < boardWidth - 1 ? false : true;
-    var ch = i >= boardWidth ? false : true;
-    var cb = i < boardWidth * (boardWidth - 1) ? false : true;
+      for (let i = 0; i < lstOfBomb.length; i++) {
+        if (lstOfBomb[i].x == x && lstOfBomb[i].y == y) haveABomb = true;
+      }
 
-    if (!cg && lstOfBomb.indexOf(i - 1) >= 0) nbOfBombNext++;
+      const sqProps = {
+        x: x,
+        y: y,
+        boardWidth: boardWidth,
+        haveBomb: haveABomb,
+        revealed: false,
+        flagged: false,
+      };
 
-    if (!cd && lstOfBomb.indexOf(i + 1) >= 0) nbOfBombNext++;
-
-    if (!ch && lstOfBomb.indexOf(i - boardWidth) >= 0) nbOfBombNext++;
-
-    if (!cb && lstOfBomb.indexOf(i + boardWidth) >= 0) nbOfBombNext++;
-
-    if (!cg && !ch && lstOfBomb.indexOf(i - boardWidth - 1) >= 0)
-      nbOfBombNext++;
-
-    if (!cg && !cb && lstOfBomb.indexOf(i + boardWidth - 1) >= 0)
-      nbOfBombNext++;
-
-    if (!cd && !ch && lstOfBomb.indexOf(i - boardWidth + 1) >= 0)
-      nbOfBombNext++;
-
-    if (!cd && !cb && lstOfBomb.indexOf(i + boardWidth + 1) >= 0)
-      nbOfBombNext++;
-
-    const sqProps = {
-      index: i,
-      boardWidth: boardWidth,
-      haveBomb: lstOfBomb.indexOf(i) >= 0,
-      numberOfBombNext: nbOfBombNext,
-      revealed: false,
-      revealFunct: () => {},
-      flagged: false,
-      switchFlag: () => {},
-    };
-
-    b.push(sqProps);
+      b[x][y] = sqProps;
+    }
   }
 
   return b;
@@ -84,14 +87,12 @@ function Demineur(props: any) {
   const [boardWidth, setBoardWidth] = useState(props.width);
   const [numberOfBomb, setNumberOfBomb] = useState(props.nmbBomb);
   const [board, setBoard] = useState(generateBoard(boardWidth, numberOfBomb));
-  const [dspBoard, setDspBoard] = useState(
-    board.map((sqr: SquareProps) => <>{DemineurSquare(sqr)}</>)
-  );
   const [endStatus, setEndStatus] = useState(endStatusEnum.notYet);
+  const [ignored, forceUpdate] = useReducer((x: number) => x + 1, 0);
   const [playBoom] = useSound(boomSFX);
   const intl = useIntl();
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
-
+  document.addEventListener("contextmenu", (event) => event.preventDefault()); // lock the right click
+  /*
   function updateBoard(b: SquareProps[]) {
     setBoard(b);
     setDspBoard(b.map((sqr: SquareProps) => <>{DemineurSquare(sqr)}</>));
@@ -134,44 +135,60 @@ function Demineur(props: any) {
       updateBoard(board);
     }
   }
-
   board.map((elm: SquareProps) => {
     elm.revealFunct = revealSquare;
     elm.switchFlag = switchFlag;
   });
 
-  return (
-    <div data-testid={"demineur"} className={styles.demineursquare}>
-      {endStatus == endStatusEnum.win ? (
-        <h1 className={styles.win}>
-          {intl.formatMessage({ id: "app.demineur.win" })}
-        </h1>
-      ) : endStatus == endStatusEnum.loose ? (
-        <h1 className={styles.loose}>
-          {intl.formatMessage({ id: "app.demineur.loose" })}
-        </h1>
-      ) : (
-        <h1 className={styles.letsplay}>
-          {intl.formatMessage({ id: "app.demineur.letsplay" })}
-        </h1>
-      )}
+*/
 
-      {dspBoard}
-      <br />
-      <button
-        className={styles.resetBtn}
-        onClick={() => {
-          setEndStatus(endStatusEnum.notYet);
-          var newBoard = generateBoard(boardWidth, numberOfBomb);
-          setBoard(newBoard);
-          setDspBoard(
-            newBoard.map((sqr: SquareProps) => <>{DemineurSquare(sqr)}</>)
-          );
-        }}
-      >
-        {intl.formatMessage({ id: "app.demineur.newgame" })}
-      </button>
-    </div>
+  return (
+    <BoardContext.Provider
+      value={{
+        board: board,
+        updateBoard: (board: SquareProps[][]) => {
+          forceUpdate();
+        },
+      }}
+    >
+      <div data-testid={"demineur"} className={styles.demineurgame}>
+        {endStatus == endStatusEnum.win ? (
+          <h1 className={styles.win}>
+            {intl.formatMessage({ id: "app.demineur.win" })}
+          </h1>
+        ) : endStatus == endStatusEnum.loose ? (
+          <h1 className={styles.loose}>
+            {intl.formatMessage({ id: "app.demineur.loose" })}
+          </h1>
+        ) : (
+          <h1 className={styles.letsplay}>
+            {intl.formatMessage({ id: "app.demineur.letsplay" })}
+          </h1>
+        )}
+        <div className={styles.demineurboard}>
+          {board.map((sqrRow: SquareProps[], x) => {
+            return (
+              <div className={styles.rowsquare}>
+                {sqrRow.map((sqr: SquareProps, y) => {
+                  return <DemineurSquare key={x * y} x={x} y={y} />;
+                })}
+              </div>
+            );
+          })}
+        </div>
+        <br />
+        <button
+          className={styles.resetBtn}
+          onClick={() => {
+            setEndStatus(endStatusEnum.notYet);
+            var newBoard = generateBoard(boardWidth, numberOfBomb);
+            setBoard(newBoard);
+          }}
+        >
+          {intl.formatMessage({ id: "app.demineur.newgame" })}
+        </button>
+      </div>
+    </BoardContext.Provider>
   );
 }
 
