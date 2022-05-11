@@ -17,49 +17,38 @@ interface Ilangue {
   message: any;
 }
 
-export default class LanguageManager extends React.Component<null, Ilangue> {
-  constructor(props: any) {
-    super(props);
+const defaultLanguage =
+  navigator.language.split(/[-_]/)[0] == "fr"
+    ? Languages.French
+    : Languages.English;
 
-    let lang =
-      navigator.language.split(/[-_]/)[0] == "fr"
-        ? Languages.French
-        : Languages.English;
+export default class LanguageManager {
+  language = defaultLanguage;
+  message = messages.get(defaultLanguage);
 
-    this.state = {
-      language: lang,
-      message: messages.get(lang),
-    };
+  constructor() {
+    this.switchLanguage = this.switchLanguage.bind(this);
 
     const cache = createIntlCache();
 
     createIntl(
       {
-        locale: this.state.language,
-        messages: this.state.message,
+        locale: this.language,
+        messages: this.message,
       },
       cache
     );
   }
 
   getLanguage() {
-    return this.state.language;
+    return this.language;
   }
   getMessage() {
-    return this.state.message;
+    return this.message;
   }
 
   switchLanguage(lang: Languages) {
-    this.setState(
-      {
-        language: lang,
-        message: messages.get(lang),
-      },
-      () => {
-        console.log("LanguageManager callback : " + this.state.language);
-      }
-    );
-    console.log(lang);
-    console.log(this.state.language);
+    this.language = lang;
+    this.message = messages.get(lang);
   }
 }
