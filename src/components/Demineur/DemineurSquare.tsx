@@ -42,6 +42,7 @@ function DemineurSquare({ x, y }: any) {
         revealNear(xn, yn);
       }
     }
+    boardInterface.setBoard([...board]);
   }
 
   return (
@@ -52,14 +53,13 @@ function DemineurSquare({ x, y }: any) {
           if (gameStatut == endStatusEnum.notYet) {
             if (haveBomb) playBoom();
             revealCase(x, y);
-            boardInterface.updateBoard();
           }
         }}
         onContextMenu={() => {
           // right click
           if (gameStatut == endStatusEnum.notYet) {
             board[x][y].flagged = !flagged;
-            boardInterface.updateBoard();
+            boardInterface.setBoard([...board]);
           }
         }}
         className={

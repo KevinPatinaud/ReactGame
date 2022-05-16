@@ -22,7 +22,7 @@ export enum endStatusEnum {
 export interface BoardInterface {
   board: SquareProps[][];
   gameStatut: endStatusEnum;
-  updateBoard: Function;
+  setBoard: Function;
 }
 
 export const BoardContext = React.createContext({} as BoardInterface);
@@ -115,12 +115,11 @@ function getNumberBombNext(board: SquareProps[][], x: number, y: number) {
 }
 
 function Demineur(props: any) {
-  const [boardWidth, setBoardWidth] = useState(props.width);
-  const [numberOfBomb, setNumberOfBomb] = useState(props.nmbBomb);
+  const boardWidth = props.width;
+  const numberOfBomb = props.nmbBomb;
   const [board, setBoard] = useState(generateBoard(boardWidth, numberOfBomb));
   const [endStatus, setEndStatus] = useState(endStatusEnum.notYet);
-  const [ignored, forceUpdate] = useReducer((x: number) => x + 1, 0);
-  const [playBoom] = useSound(boomSFX);
+  // const [playBoom] = useSound(boomSFX);
   const intl = useIntl();
 
   document.addEventListener("contextmenu", (event) => event.preventDefault()); // lock the right click
@@ -150,9 +149,7 @@ function Demineur(props: any) {
       value={{
         board: board,
         gameStatut: endStatus,
-        updateBoard: (board: SquareProps[][]) => {
-          forceUpdate();
-        },
+        setBoard: setBoard,
       }}
     >
       <div data-testid={"demineur"} className={styles.demineurgame}>
