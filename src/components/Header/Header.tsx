@@ -1,4 +1,3 @@
-import React, { Component, FunctionComponent, useState } from "react";
 import { Languages } from "../Language/LanguageManager";
 import styles from "./Header.module.css";
 
