@@ -19,7 +19,7 @@ function DemineurSquare({ x, y }: any) {
   // console.log(boardInterface);
 
   function revealNear(xn: number, yn: number) {
-    if (numberOfBombNext == 0) {
+    if (numberOfBombNext === 0) {
       if (xn > 0) {
         revealCase(xn - 1, yn);
       }
@@ -38,7 +38,7 @@ function DemineurSquare({ x, y }: any) {
   function revealCase(xn: number, yn: number) {
     if (!board[xn][yn].revealed) {
       board[xn][yn].revealed = true;
-      if (board[xn][yn].numberOfBombNext == 0 && !board[xn][yn].haveBomb) {
+      if (board[xn][yn].numberOfBombNext === 0 && !board[xn][yn].haveBomb) {
         revealNear(xn, yn);
       }
     }
@@ -50,7 +50,7 @@ function DemineurSquare({ x, y }: any) {
       <div
         onClick={() => {
           // left click
-          if (gameStatut == endStatusEnum.notYet) {
+          if (gameStatut === endStatusEnum.notYet) {
             if (haveBomb) playBoom();
             revealCase(x, y);
           }

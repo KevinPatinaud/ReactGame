@@ -1,6 +1,5 @@
 import messages_fr from "../../translations/fr.json";
 import messages_en from "../../translations/en.json";
-import React from "react";
 import { createIntl, createIntlCache } from "react-intl";
 
 export enum Languages {
@@ -12,13 +11,8 @@ const messages = new Map();
 messages.set(Languages.French, messages_fr);
 messages.set(Languages.English, messages_en);
 
-interface Ilangue {
-  language: Languages;
-  message: any;
-}
-
 const defaultLanguage =
-  navigator.language.split(/[-_]/)[0] == "fr"
+  navigator.language.split(/[-_]/)[0] === "fr"
     ? Languages.French
     : Languages.English;
 

@@ -1,0 +1,53 @@
+.histoLine
+{
+
+}
+
+.histoCase
+{
+    width : 40px;
+    height : 40px;
+    border-radius: 100%;
+    display:inline-block;
+    margin-left: 10px;
+    border : 1px solid black;
+}
+
+.emptyColor
+{
+    border-style:dotted;
+}
+
+
+
+.validationPosition{
+    width : 40px;
+    height : 50px;
+    display:inline-block;
+    margin-left: 10px; 
+    border : 1px groove black;
+    background-color: #CCCCCC;
+}
+
+.dotPosition
+{
+    width : 15px;
+    height : 15px;
+    margin-left: 1px; 
+    margin-top: 1px;
+    border-radius: 100%;
+    display:inline-block;
+    border : 1px solid black;
+    background-color: white;
+}
+
+.dotWellPosition
+{
+    background-color: forestgreen;
+}
+
+.dotBadPosition
+{
+    background-color: crimson;
+}
+

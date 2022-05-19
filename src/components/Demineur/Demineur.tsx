@@ -1,16 +1,7 @@
-import React, {
-  createContext,
-  Component,
-  FunctionComponent,
-  useState,
-  useReducer,
-} from "react";
+import React, { useState } from "react";
 import DemineurSquare from "./DemineurSquare";
 import SquareProps from "./SquareProps";
-import useSound from "use-sound";
-import boomSFX from "../../sounds/boom.mp3";
 import styles from "./Demineur.module.css";
-import { lookupService } from "dns";
 import { useIntl } from "react-intl";
 
 export enum endStatusEnum {
