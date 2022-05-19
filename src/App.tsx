@@ -13,6 +13,9 @@ import {
 } from "react-router-dom";
 import React from "react";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+
 const Menu = React.lazy(() => import("./components/Menu"));
 const Mastermind = React.lazy(() => import("./components/Mastermind"));
 const Demineur = React.lazy(() => import("./components/Demineur"));
