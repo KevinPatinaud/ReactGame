@@ -3,7 +3,10 @@ import styles from "./ButtonColor.module.css";
 import { MastermindColor } from "../../Color";
 import React from "react";
 
-const ButtonColor: FC<{ color: string; clickColor: Function }> = (props) => {
+const ButtonColor: FC<{
+  color: string;
+  clickColor: Function;
+}> = (props) => {
   const [color, setColor] = useState(props.color);
   console.log("render button color : " + color);
 

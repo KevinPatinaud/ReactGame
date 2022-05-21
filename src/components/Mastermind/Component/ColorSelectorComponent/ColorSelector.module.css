@@ -4,3 +4,29 @@
     position : fixed;
     bottom: 50px;
 }
+
+
+.ColorSquare
+{
+    width : 45px;
+    height: 45px;
+    border-radius: 20%;
+    cursor: pointer;
+    display:inline-block;
+    margin-left: 10px;
+}
+
+
+.ColorSquareSelected{
+    border : 1px solid black;
+}
+
+.ColorSquareNotSelected
+{
+    border : 1px dashed black;
+}
+
+.ColorSquareActive
+{
+    border : 3px dashed #888888;
+}
