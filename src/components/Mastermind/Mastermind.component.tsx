@@ -11,7 +11,7 @@ function generateNewCombinaison() {
   let result = [];
 
   for (let i = 0; i < 4; i++) {
-    result.push(Object.values(MastermindColor)[Math.round(Math.random() * 8)]);
+    result.push(Object.values(MastermindColor)[Math.trunc(Math.random() * 8)]);
   }
   console.log("combinaison : " + result);
   return result;
